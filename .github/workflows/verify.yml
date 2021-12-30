@@ -1,0 +1,28 @@
+name: Verify
+on:
+  push:
+    branches:
+      - '**'
+jobs:
+  verify:
+    runs-on: ubuntu-20.04
+    env:
+      NODE_ENV: development
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16.13.1"
+          cache: "yarn"
+      - name: Install node modules
+        run: yarn install --non-interactive --check-files --frozen-lockfile
+      - name: Lint
+        run: ./node_modules/.bin/gulp lint
+      - name: Test
+        run: ./node_modules/.bin/gulp test
+      - name: Build
+        run: ./node_modules/.bin/gulp build
+      - name: Codecov
+        uses: codecov/codecov-action@v2

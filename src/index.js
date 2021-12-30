@@ -1,0 +1,51 @@
+/* eslint-disable no-console */
+
+import { parseCookie } from './cookie-helper.js';
+import { SESSION_COOKIE_NAME } from './config.js';
+import { callRoomAccessAuthEndpoint } from './website-api-client.js';
+import { forbiddenResponse, internalServerErrorResponse, loginRedirectResponse, notFoundResponse } from './response-helper.js';
+
+export async function handler(event, _context, callback) {
+  const request = event.Records[0].cf.request;
+
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    // This should never happen, only GET and HEAD should be allowed in CloudFront configuration
+    // In case of misconfiguration we respond with 500 to any non read-request
+    return callback(null, internalServerErrorResponse());
+  }
+
+  const roomId = ((/^\/rooms\/([^/]+)\/.+$/).exec(request.uri) || [])[1];
+  if (!roomId) {
+    // Request path does not match the required pattern -> 404
+    return callback(null, notFoundResponse());
+  }
+
+  const sessionCookie = parseCookie(request.headers, SESSION_COOKIE_NAME);
+  if (!sessionCookie) {
+    // If there is no cookie, we redirect to the login page, so the user can login and then be redirected back to the room resource
+    return callback(null, loginRedirectResponse(request));
+  }
+
+  let verificationResponse;
+  try {
+    verificationResponse = await callRoomAccessAuthEndpoint(roomId, sessionCookie);
+  } catch (err) {
+    console.error(err);
+    return callback(null, internalServerErrorResponse());
+  }
+
+  switch (verificationResponse.statusCode) {
+    case 200:
+      // User is allowed to proceed, we return the original request
+      return callback(null, request);
+    case 401:
+      // Unauthorized (in case the cookie is there but the session has already expired, re-login is required)
+      return callback(null, loginRedirectResponse(request));
+    case 403:
+      // Forbidden (cookie is there but room access is denied)
+      return callback(null, forbiddenResponse());
+    default:
+      // In all other cases we just return status 500
+      return callback(null, internalServerErrorResponse());
+  }
+}
