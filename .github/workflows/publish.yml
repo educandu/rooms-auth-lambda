@@ -11,6 +11,8 @@ jobs:
       NODE_ENV: development
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       JIRA_USER: ${{secrets.JIRA_USER}}
+      JIRA_BASE_URL: https://educandu.atlassian.net
+      JIRA_PROJECT_KEYS: EDU,OMA,ELMU
       JIRA_API_KEY: ${{secrets.JIRA_API_KEY}}
     steps:
       - name: Checkout code
@@ -38,4 +40,10 @@ jobs:
       - name: Pack function
         run: ./node_modules/.bin/gulp pack
       - name: Create Github release and tag JIRA issues
-        run:  ./node_modules/.bin/gulp release --jira-user "$JIRA_USER" --jira-api-key "$JIRA_API_KEY"
+        run: |
+          ./node_modules/.bin/gulp release \
+            --github-token "$GITHUB_TOKEN" \
+            --jira-base-url "$JIRA_BASE_URL" \
+            --jira-project-keys "$JIRA_PROJECT_KEYS" \
+            --jira-user "$JIRA_USER" \
+            --jira-api-key "$JIRA_API_KEY"
