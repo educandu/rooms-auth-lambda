@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "description": "Lambda@Edge function for authorizing access to private room resources in educandu",
   "type": "module",
-  "private": true,
   "engines": {
     "node": "^16.12.0"
   },
