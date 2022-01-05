@@ -9,11 +9,9 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       NODE_ENV: development
-      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      JIRA_USER: ${{secrets.JIRA_USER}}
+      DOCKER_IMAGE: educandu/rooms-auth-lambda
       JIRA_BASE_URL: https://educandu.atlassian.net
       JIRA_PROJECT_KEYS: EDU,OMA,ELMU
-      JIRA_API_KEY: ${{secrets.JIRA_API_KEY}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -35,6 +33,10 @@ jobs:
         run: ./node_modules/.bin/gulp verifySemverTag --tag ${{ steps.tag.outputs.tag }}
       - name: Set package version
         run: npm version --allow-same-version --git-tag-version=false ${{ steps.tag.outputs.tag }}
+      - name: Authenticate with npm
+        run: npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_AUTH_TOKEN}}
+      - name: Publish to npm
+        run: npm publish
       - name: Build function
         run: ./node_modules/.bin/gulp build
       - name: Pack function
@@ -42,8 +44,8 @@ jobs:
       - name: Create Github release and tag JIRA issues
         run: |
           ./node_modules/.bin/gulp release \
-            --github-token "$GITHUB_TOKEN" \
-            --jira-base-url "$JIRA_BASE_URL" \
-            --jira-project-keys "$JIRA_PROJECT_KEYS" \
-            --jira-user "$JIRA_USER" \
-            --jira-api-key "$JIRA_API_KEY"
+            --github-token ${{secrets.GITHUB_TOKEN}} \
+            --jira-base-url ${{ env.JIRA_BASE_URL }} \
+            --jira-project-keys ${{ env.JIRA_PROJECT_KEYS }} \
+            --jira-user ${{secrets.JIRA_USER}} \
+            --jira-api-key ${{secrets.JIRA_API_KEY}}

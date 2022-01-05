@@ -9,4 +9,6 @@ if (!WEBSITE_BASE_URL) {
 // The CDN is supposed to have the same protocol as the website!
 export const CLOUDFRONT_PROTO = new URL(WEBSITE_BASE_URL).protocol;
 
-export const SESSION_COOKIE_NAME = 'SID';
+export const SESSION_COOKIE_NAME = process.env.SESSION_COOKIE_NAME || 'SESSION_ID';
+
+export const DISABLE_LOGGING = process.env.DISABLE_LOGGING === true.toString();

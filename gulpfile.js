@@ -61,7 +61,7 @@ export async function build() {
   } else {
     // eslint-disable-next-line require-atomic-updates
     bundler = await esbuild.build({
-      entryPoints: ['src/index.js'],
+      entryPoints: ['src/lambda/index.js'],
       target: ['node14'],
       platform: 'node',
       format: 'cjs',
@@ -81,7 +81,7 @@ export async function pack() {
 
 export async function startServer() {
   currentApp = new NodeProcess({
-    script: 'src/dev-server.js',
+    script: 'src/dev-server/run.js',
     env: {
       // eslint-disable-next-line no-process-env
       ...process.env,
