@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       NODE_ENV: development
-      DOCKER_IMAGE: educandu/rooms-auth-lambda
       JIRA_BASE_URL: https://educandu.atlassian.net
       JIRA_PROJECT_KEYS: EDU,OMA,ELMU
     steps:
@@ -37,10 +36,8 @@ jobs:
         run: npm set //registry.npmjs.org/:_authToken ${{secrets.NPM_AUTH_TOKEN}}
       - name: Publish to npm
         run: npm publish
-      - name: Build function
+      - name: Build
         run: ./node_modules/.bin/gulp build
-      - name: Pack function
-        run: ./node_modules/.bin/gulp pack
       - name: Create Github release and tag JIRA issues
         run: |
           ./node_modules/.bin/gulp release \

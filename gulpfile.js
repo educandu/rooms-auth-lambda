@@ -71,9 +71,7 @@ export async function build() {
       outfile: './dist/index.js'
     });
   }
-}
 
-export async function pack() {
   await writeZipFile('./pack/lambda.zip', {
     'index.js': './dist/index.js'
   });
