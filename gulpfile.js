@@ -1,9 +1,6 @@
 import del from 'del';
 import path from 'path';
 import gulp from 'gulp';
-import gulpif from 'gulp-if';
-import esbuild from 'esbuild';
-import eslint from 'gulp-eslint';
 import Graceful from 'node-graceful';
 import {
   cliArgs,
@@ -11,10 +8,12 @@ import {
   createLabelInJiraIssues,
   createReleaseNotesFromCurrentTag,
   ensureIsValidSemverTag,
+  esbuild,
+  eslint,
   jest,
   NodeProcess,
   writeZipFile
-} from './dev/index.js';
+} from '@educandu/dev-tools';
 
 let bundler = null;
 let currentApp = null;
@@ -28,19 +27,12 @@ export async function clean() {
   await del(['dist', 'pack', 'coverage']);
 }
 
-export function lint() {
-  return gulp.src(['*.js', 'src/**/*.js'], { base: './' })
-    .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(gulpif(!currentApp, eslint.failAfterError()));
+export async function lint() {
+  await eslint.lint(['*.js', 'src/**/*.js'], { failOnError: !currentApp });
 }
 
-export function fix() {
-  return gulp.src(['*.js', 'src/**/*.js'], { base: './' })
-    .pipe(eslint({ fix: true }))
-    .pipe(eslint.format())
-    .pipe(gulpif(file => file.eslint?.fixed, gulp.dest('./')))
-    .pipe(eslint.failAfterError());
+export async function fix() {
+  await eslint.fix(['*.js', 'src/**/*.js']);
 }
 
 export function test() {
@@ -60,12 +52,12 @@ export async function build() {
     await bundler.rebuild();
   } else {
     // eslint-disable-next-line require-atomic-updates
-    bundler = await esbuild.build({
+    bundler = await esbuild.bundle({
       entryPoints: ['src/lambda/index.js'],
       target: ['node14'],
       platform: 'node',
       format: 'cjs',
-      bundle: true,
+      splitting: false,
       incremental: !!currentApp,
       sourcemap: false,
       outfile: './dist/index.js'
@@ -84,7 +76,7 @@ export async function startServer() {
       // eslint-disable-next-line no-process-env
       ...process.env,
       NODE_ENV: 'development',
-      PORT: (10000).toString(),
+      PORT: 10000,
       CDN_BASE_URL: 'http://localhost:9000/dev-educandu-cdn',
       WEBSITE_BASE_URL: 'http://localhost:3000'
     }
@@ -129,7 +121,7 @@ export const serve = gulp.series(build, startServer);
 export const verify = gulp.series(lint, test, build);
 
 export function setupWatchers(done) {
-  gulp.watch(['src/**/*.js', 'test-app/**/*.js'], gulp.series(build, restartServer));
+  gulp.watch(['src/**/*.js'], gulp.series(build, restartServer));
   done();
 }
 
