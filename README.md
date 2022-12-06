@@ -11,21 +11,22 @@ The handler in this package is supposed to run as a Lambda@Edge function in AWS.
 ### Environment variables
 
 ~~~sh
+export SESSION_COOKIE_NAME="SESSION_ID" # mandatory
 export WEBSITE_BASE_URL="https://consuming-website.com" # mandatory
-export SESSION_COOKIE_NAME="MYCOOKIE" # optional, defaults to "SESSION_ID"
-export DISABLE_LOGGING="true" # optional, defaults to logging enabled
+export DISABLE_LOGGING="true" # optional, defaults to logging being enabled
 ~~~
 
 As AWS Lambda@Edge function do not support environment variables, any values have to be injected into the code itself after deployment, for example (at the top of the bundle file:
 
 ~~~js
+process.env.SESSION_COOKIE_NAME = 'SESSION_ID';
 process.env.WEBSITE_BASE_URL = 'https://consuming-website.com';
 ~~~
 
 ### In AWS as a Lambda@Edge function
 
 1. Run `gulp build` and you will find a single script file `index.js` in the `dist` folder which contains a bundle of all code needed to run on AWS.
-2. Run `gulp pack` and you will find a file `lambda.zip` in the `pack` folder containing the bundle. This can be used for automated deployments on AWS (The Github action `publish` creates a release on Github and uploads this zip file).
+2. Run `gulp pack` and you will find a file `lambda.zip` in the `pack` folder containing the bundle (with `index.js` renamed to `index.mjs` in order for AWS to indicate that it is an ECMAScript module). This can be used for automated deployments on AWS (The Github action `publish` creates a release on Github and uploads this zip file).
 
 ### In code as a node module
 
@@ -50,6 +51,7 @@ This package comes with a development server that can be used for testing the la
 ~~~sh
 yarn add @educandu/rooms-auth-lambda --dev
 
+export SESSION_COOKIE_NAME="SESSION_ID"
 export WEBSITE_BASE_URL="http://localhost:3000"
 ~~~
 
@@ -75,6 +77,7 @@ server.close(err => {
 yarn add @educandu/rooms-auth-lambda --dev
 
 export PORT=10000
+export SESSION_COOKIE_NAME="SESSION_ID"
 export WEBSITE_BASE_URL="http://localhost:3000"
 export CDN_BASE_URL="http://localhost:9000/my-bucket"
 

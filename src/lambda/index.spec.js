@@ -1,7 +1,8 @@
-import sinon from 'sinon';
-import { promisify } from 'util';
 import { handler } from './index.js';
+import { promisify } from 'node:util';
+import { createSandbox } from 'sinon';
 import WebsiteApiClient from './website-api-client.js';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 function createLambdaEvent({ host = 'localhost:10000', method = 'GET', uri = '/rooms/abc/my-image.png', cookie = 'SESSION_ID=s%3AIMb28VLUKex1w166' }) {
   return {
@@ -23,7 +24,7 @@ function createLambdaEvent({ host = 'localhost:10000', method = 'GET', uri = '/r
 }
 
 describe('index', () => {
-  const sandbox = sinon.createSandbox();
+  const sandbox = createSandbox();
 
   beforeEach(() => {
     sandbox.stub(WebsiteApiClient.prototype, 'callRoomAccessAuthEndpoint');
@@ -74,7 +75,7 @@ describe('index', () => {
     describe('when the verification call to the website succeeds', () => {
       describe('and the response code of the verification call is 200', () => {
         beforeEach(() => {
-          WebsiteApiClient.prototype.callRoomAccessAuthEndpoint.resolves({ statusCode: 200 });
+          WebsiteApiClient.prototype.callRoomAccessAuthEndpoint.resolves({ status: 200 });
         });
         it('should respond with the initial request value', async () => {
           const event = createLambdaEvent({});
@@ -85,7 +86,7 @@ describe('index', () => {
 
       describe('and the response code of the verification call is 401', () => {
         beforeEach(() => {
-          WebsiteApiClient.prototype.callRoomAccessAuthEndpoint.resolves({ statusCode: 401 });
+          WebsiteApiClient.prototype.callRoomAccessAuthEndpoint.resolves({ status: 401 });
         });
         it('should respond with status code 302', async () => {
           const result = await promisifiedHandler(createLambdaEvent({}), {});
@@ -99,7 +100,7 @@ describe('index', () => {
 
       describe('and the response code of the verification call is 403', () => {
         beforeEach(() => {
-          WebsiteApiClient.prototype.callRoomAccessAuthEndpoint.resolves({ statusCode: 403 });
+          WebsiteApiClient.prototype.callRoomAccessAuthEndpoint.resolves({ status: 403 });
         });
         it('should respond with status code 403', async () => {
           const result = await promisifiedHandler(createLambdaEvent({}), {});
@@ -109,7 +110,7 @@ describe('index', () => {
 
       describe('and the response code of the verification call is any other value', () => {
         beforeEach(() => {
-          WebsiteApiClient.prototype.callRoomAccessAuthEndpoint.resolves({ statusCode: 503 });
+          WebsiteApiClient.prototype.callRoomAccessAuthEndpoint.resolves({ status: 503 });
         });
         it('should respond with status code 500', async () => {
           const result = await promisifiedHandler(createLambdaEvent({}), {});

@@ -1,4 +1,4 @@
-import { inspect } from 'util';
+import { inspect } from 'node:util';
 import { logger } from './logging.js';
 import { parseCookie } from './cookie-helper.js';
 import { SESSION_COOKIE_NAME } from './config.js';
@@ -36,7 +36,7 @@ export async function handler(event, _context, callback) {
     return callback(null, internalServerErrorResponse());
   }
 
-  switch (verificationResponse.statusCode) {
+  switch (verificationResponse.status) {
     case 200:
       // User is allowed to proceed, we return the original request
       return callback(null, request);

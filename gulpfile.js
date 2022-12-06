@@ -1,6 +1,6 @@
-import del from 'del';
 import path from 'path';
 import gulp from 'gulp';
+import { deleteAsync } from 'del';
 import Graceful from 'node-graceful';
 import {
   cliArgs,
@@ -10,7 +10,7 @@ import {
   ensureIsValidSemverTag,
   esbuild,
   eslint,
-  jest,
+  vitest,
   NodeProcess,
   writeZipFile
 } from '@educandu/dev-tools';
@@ -24,7 +24,7 @@ Graceful.on('exit', async () => {
 });
 
 export async function clean() {
-  await del(['dist', 'pack', 'coverage']);
+  await deleteAsync(['dist', 'pack', 'coverage']);
 }
 
 export async function lint() {
@@ -36,27 +36,22 @@ export async function fix() {
 }
 
 export function test() {
-  return jest.coverage();
-}
-
-export function testChanged() {
-  return jest.changed();
+  return vitest.coverage();
 }
 
 export function testWatch() {
-  return jest.watch();
+  return vitest.watch();
 }
 
 export async function build() {
   if (bundler?.rebuild) {
     await bundler.rebuild();
   } else {
-    // eslint-disable-next-line require-atomic-updates
     bundler = await esbuild.bundle({
       entryPoints: ['src/lambda/index.js'],
-      target: ['node14'],
+      target: ['node18'],
       platform: 'node',
-      format: 'cjs',
+      format: 'esm',
       splitting: false,
       incremental: !!currentApp,
       sourcemap: false,
@@ -65,7 +60,7 @@ export async function build() {
   }
 
   await writeZipFile('./pack/lambda.zip', {
-    'index.js': './dist/index.js'
+    'index.mjs': './dist/index.js'
   });
 }
 
@@ -73,7 +68,6 @@ export async function startServer() {
   currentApp = new NodeProcess({
     script: 'src/dev-server/run.js',
     env: {
-      // eslint-disable-next-line no-process-env
       ...process.env,
       NODE_ENV: 'development',
       PORT: 10000,
