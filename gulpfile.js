@@ -49,9 +49,9 @@ export async function build() {
   } else {
     bundler = await esbuild.bundle({
       entryPoints: ['src/lambda/index.js'],
-      target: ['node18'],
+      target: ['node16'],
       platform: 'node',
-      format: 'esm',
+      format: 'cjs',
       splitting: false,
       incremental: !!currentApp,
       sourcemap: false,
@@ -60,7 +60,7 @@ export async function build() {
   }
 
   await writeZipFile('./pack/lambda.zip', {
-    'index.mjs': './dist/index.js'
+    'index.js': './dist/index.js'
   });
 }
 

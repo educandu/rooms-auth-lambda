@@ -24,7 +24,8 @@
     "envalid": "^7.3.1",
     "express": "^4.18.2",
     "http-proxy": "^1.18.1",
-    "node-graceful": "^3.1.0"
+    "node-graceful": "^3.1.0",
+    "phin": "^3.7.0"
   },
   "devDependencies": {
     "@educandu/dev-tools": "^4.0.0",

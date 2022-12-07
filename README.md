@@ -25,8 +25,7 @@ process.env.WEBSITE_BASE_URL = 'https://consuming-website.com';
 
 ### In AWS as a Lambda@Edge function
 
-1. Run `gulp build` and you will find a single script file `index.js` in the `dist` folder which contains a bundle of all code needed to run on AWS.
-2. Run `gulp pack` and you will find a file `lambda.zip` in the `pack` folder containing the bundle (with `index.js` renamed to `index.mjs` in order for AWS to indicate that it is an ECMAScript module). This can be used for automated deployments on AWS (The Github action `publish` creates a release on Github and uploads this zip file).
+Run `gulp build` and you will find a single script file `index.js` in the `dist` folder which contains a bundle of all code needed to run on AWS. You will also find a file `lambda.zip` in the `pack` folder containing the bundle. This can be used for automated deployments on AWS (The Github action `publish` creates a release on Github and uploads this zip file).
 
 ### In code as a node module
 
