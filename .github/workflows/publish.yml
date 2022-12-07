@@ -19,15 +19,15 @@ jobs:
       - name: Install node
         uses: actions/setup-node@v2
         with:
-          node-version: "16.13.1"
+          node-version: "18.12.1"
           cache: "yarn"
       - name: Install node modules
         run: yarn install --non-interactive --check-files --frozen-lockfile
       - name: Get tag from build environment
+        id: tag
         uses: dawidd6/action-get-tag@v1
         with:
           strip_v: true
-        id: tag
       - name: Verify tag format
         run: ./node_modules/.bin/gulp verifySemverTag --tag ${{ steps.tag.outputs.tag }}
       - name: Set package version

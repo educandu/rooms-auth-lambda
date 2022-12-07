@@ -1,7 +1,5 @@
-/* eslint-disable no-console, no-process-env */
-
-import { promisify } from 'util';
 import Graceful from 'node-graceful';
+import { promisify } from 'node:util';
 import { startDevServer } from './index.js';
 import { cleanEnv, port, url } from 'envalid';
 

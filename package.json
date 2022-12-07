@@ -4,7 +4,7 @@
   "description": "Lambda@Edge function for authorizing access to private room resources in educandu",
   "type": "module",
   "engines": {
-    "node": "^16.12.0"
+    "node": "^18.12.1"
   },
   "exports": "./src/index.js",
   "scripts": {
@@ -21,18 +21,18 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "envalid": "^7.2.2",
-    "express": "^4.17.2",
+    "envalid": "^7.3.1",
+    "express": "^4.18.2",
     "http-proxy": "^1.18.1",
-    "node-graceful": "^3.1.0",
-    "phin": "^3.6.1"
+    "node-graceful": "^3.1.0"
   },
   "devDependencies": {
-    "@educandu/dev-tools": "^1.0.0",
-    "del": "^6.0.0",
-    "eslint": "^8.8.0",
-    "eslint-plugin-import": "^2.25.4",
+    "@educandu/dev-tools": "^4.0.0",
+    "del": "^7.0.0",
+    "eslint": "^8.29.0",
+    "eslint-plugin-import": "^2.26.0",
     "gulp": "^4.0.2",
-    "sinon": "^13.0.1"
+    "sinon": "^15.0.0",
+    "vitest": "^0.25.4"
   }
 }

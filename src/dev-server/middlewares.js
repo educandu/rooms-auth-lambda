@@ -1,8 +1,6 @@
-/* eslint-disable no-console */
-
 import httpProxy from 'http-proxy';
-import { inspect, promisify } from 'util';
 import { handler } from '../lambda/index.js';
+import { inspect, promisify } from 'node:util';
 
 export function lambdaMiddleware(cdnBaseUrl) {
   const proxy = httpProxy.createProxyServer({ target: cdnBaseUrl });
