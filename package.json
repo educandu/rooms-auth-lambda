@@ -3,15 +3,13 @@
   "version": "0.0.0",
   "description": "Lambda@Edge function for authorizing access to private room resources in educandu",
   "type": "module",
-  "engines": {
-    "node": "^18.12.1"
-  },
   "exports": "./src/index.js",
-  "scripts": {
-    "start": "gulp",
-    "test": "gulp test"
+  "engines": {
+    "node": "^18.0.0"
   },
-  "keywords": [],
+  "keywords": [
+    "educandu"
+  ],
   "license": "MIT",
   "author": "Educandu Team <team@educandu.dev>",
   "homepage": "https://github.com/educandu/rooms-auth-lambda",
@@ -28,12 +26,16 @@
     "phin": "^3.7.0"
   },
   "devDependencies": {
-    "@educandu/dev-tools": "^4.0.0",
+    "@educandu/dev-tools": "^6.0.0",
+    "@educandu/eslint-config": "^1.0.2",
+    "@vitest/coverage-c8": "^0.25.8",
     "del": "^7.0.0",
-    "eslint": "^8.29.0",
+    "eslint": "^8.30.0",
     "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-react": "^7.31.11",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "gulp": "^4.0.2",
-    "sinon": "^15.0.0",
-    "vitest": "^0.25.4"
+    "sinon": "^15.0.1",
+    "vitest": "^0.25.8"
   }
 }

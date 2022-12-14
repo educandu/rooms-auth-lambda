@@ -7,6 +7,7 @@ export function lambdaMiddleware(cdnBaseUrl) {
 
   return async (req, res, next) => {
     if ((/^\/rooms\/.+$/).test(req.url)) {
+      // eslint-disable-next-line no-console
       console.log('Sending request to Lambda@Edge');
       try {
         const cookie = req.get('cookie');
@@ -33,6 +34,7 @@ export function lambdaMiddleware(cdnBaseUrl) {
       }
     }
 
+    // eslint-disable-next-line no-console
     console.log(`Proxy request ${req.url} to ${cdnBaseUrl}`);
     return proxy.web(req, res);
   };
