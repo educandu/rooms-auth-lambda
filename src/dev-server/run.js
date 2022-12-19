@@ -13,14 +13,17 @@ const { PORT, CDN_BASE_URL } = cleanEnv(process.env, {
 
 let server = startDevServer(CDN_BASE_URL, PORT, err => {
   if (err) {
+    // eslint-disable-next-line no-console
     console.error(err);
     server = null;
   } else {
+    // eslint-disable-next-line no-console
     console.log(`Lambda@Edge dev server started on port ${PORT}`);
   }
 });
 
 Graceful.on('exit', () => {
+  // eslint-disable-next-line no-console
   console.log('Shutting down Lambda@Edge dev server');
   return server ? promisify(server.close)() : Promise.resolve();
 });

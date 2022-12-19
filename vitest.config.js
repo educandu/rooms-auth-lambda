@@ -3,6 +3,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     include: ['src/**/*.spec.js'],
+    exclude: [],
     setupFiles: ['src/test-setup.js'],
     coverage: {
       reporter: ['text', 'json', 'html'],

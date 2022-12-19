@@ -1,8 +1,15 @@
 # rooms-auth-lambda
 
-[![codecov](https://codecov.io/gh/educandu/rooms-auth-lambda/branch/main/graph/badge.svg?token=SM7ANNBT3A)](https://codecov.io/gh/educandu/rooms-auth-lambda)
+[![codecov](https://codecov.io/gh/educandu/rooms-auth-lambda/branch/main/graph/badge.svg)](https://codecov.io/gh/educandu/rooms-auth-lambda)
 
 Lambda@Edge function for authorizing access to private room resources in [educandu](https://github.com/educandu/educandu).
+
+## Prerequisites
+
+* node.js ^18.0.0
+* optional: globally installed gulp: `npm i -g gulp-cli`
+
+The output of this repository is an npm package (`@educandu/rooms-auth-lambda`) as well as a zip file containing the Lambda@Edge function.
 
 ## Usage
 

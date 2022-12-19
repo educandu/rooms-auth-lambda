@@ -28,19 +28,19 @@ export async function clean() {
 }
 
 export async function lint() {
-  await eslint.lint(['*.js', 'src/**/*.js'], { failOnError: !currentApp });
+  await eslint.lint('**/*.js', { failOnError: !currentApp });
 }
 
 export async function fix() {
-  await eslint.fix(['*.js', 'src/**/*.js']);
+  await eslint.fix('**/*.js');
 }
 
-export function test() {
-  return vitest.coverage();
+export async function test() {
+  await vitest.coverage();
 }
 
-export function testWatch() {
-  return vitest.watch();
+export async function testWatch() {
+  await vitest.watch();
 }
 
 export async function build() {
