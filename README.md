@@ -20,6 +20,7 @@ The handler in this package is supposed to run as a Lambda@Edge function in AWS.
 ~~~sh
 export SESSION_COOKIE_NAME="SESSION_ID" # mandatory
 export WEBSITE_BASE_URL="https://consuming-website.com" # mandatory
+export X_ROOMS_AUTH_SECRET="<secret>" # mandatory
 export DISABLE_LOGGING="true" # optional, defaults to logging being enabled
 ~~~
 
@@ -28,6 +29,7 @@ As AWS Lambda@Edge function do not support environment variables, any values hav
 ~~~js
 process.env.SESSION_COOKIE_NAME = 'SESSION_ID';
 process.env.WEBSITE_BASE_URL = 'https://consuming-website.com';
+process.env.X_ROOMS_AUTH_SECRET = "<secret>"
 ~~~
 
 ### In AWS as a Lambda@Edge function
@@ -59,6 +61,7 @@ yarn add @educandu/rooms-auth-lambda --dev
 
 export SESSION_COOKIE_NAME="SESSION_ID"
 export WEBSITE_BASE_URL="http://localhost:3000"
+export X_ROOMS_AUTH_SECRET="<secret>"
 ~~~
 
 ~~~js
@@ -83,9 +86,11 @@ server.close(err => {
 yarn add @educandu/rooms-auth-lambda --dev
 
 export PORT=10000
+export CDN_BASE_URL="http://localhost:9000/my-bucket"
+
 export SESSION_COOKIE_NAME="SESSION_ID"
 export WEBSITE_BASE_URL="http://localhost:3000"
-export CDN_BASE_URL="http://localhost:9000/my-bucket"
+export X_ROOMS_AUTH_SECRET="<secret>"
 
 node ./node_modules/@educandu/rooms-auth-lambda/src/dev-server/run.js
 ~~~
