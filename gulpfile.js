@@ -47,6 +47,7 @@ export async function build() {
   if (bundler?.rebuild) {
     await bundler.rebuild();
   } else {
+    // eslint-disable-next-line require-atomic-updates
     bundler = await esbuild.bundle({
       entryPoints: ['src/lambda/index.js'],
       target: ['node16'],

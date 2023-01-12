@@ -13,8 +13,8 @@ export default class WebsiteApiClient {
     return fetch(getAccessAuthorizationEndpointUrl(roomId), {
       method: 'GET',
       headers: {
-        Accept: 'application/json',
-        Cookie: `${SESSION_COOKIE_NAME}=${sessionCookie}`,
+        'Accept': 'application/json',
+        'Cookie': `${SESSION_COOKIE_NAME}=${sessionCookie}`,
         'x-rooms-auth-secret': X_ROOMS_AUTH_SECRET
       }
     });
