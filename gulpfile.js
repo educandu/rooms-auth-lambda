@@ -15,11 +15,12 @@ import {
   writeZipFile
 } from '@educandu/dev-tools';
 
-let bundler = null;
 let currentApp = null;
+let isInWatchMode = false;
+let currentAppBuildContext = null;
 
 Graceful.on('exit', async () => {
-  bundler?.rebuild?.dispose();
+  await currentAppBuildContext?.dispose();
   await currentApp?.waitForExit();
 });
 
@@ -28,7 +29,7 @@ export async function clean() {
 }
 
 export async function lint() {
-  await eslint.lint('**/*.js', { failOnError: !currentApp });
+  await eslint.lint('**/*.js', { failOnError: !isInWatchMode });
 }
 
 export async function fix() {
@@ -44,17 +45,17 @@ export async function testWatch() {
 }
 
 export async function build() {
-  if (bundler?.rebuild) {
-    await bundler.rebuild();
+  if (currentAppBuildContext) {
+    await currentAppBuildContext.rebuild();
   } else {
     // eslint-disable-next-line require-atomic-updates
-    bundler = await esbuild.bundle({
+    currentAppBuildContext = await esbuild.bundle({
       entryPoints: ['src/lambda/index.js'],
       target: ['node16'],
       platform: 'node',
       format: 'cjs',
       splitting: false,
-      incremental: !!currentApp,
+      incremental: isInWatchMode,
       sourcemap: false,
       outfile: './dist/index.js'
     });
@@ -115,11 +116,16 @@ export const serve = gulp.series(build, startServer);
 
 export const verify = gulp.series(lint, test, build);
 
+export function setupWatchMode(done) {
+  isInWatchMode = true;
+  done();
+}
+
 export function setupWatchers(done) {
   gulp.watch(['src/**/*.js'], gulp.series(build, restartServer));
   done();
 }
 
-export const startWatch = gulp.series(serve, setupWatchers);
+export const watch = gulp.series(setupWatchMode, serve, setupWatchers);
 
-export default startWatch;
+export default watch;
