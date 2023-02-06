@@ -16,7 +16,7 @@ export async function handler(event, _context, callback) {
     return callback(null, internalServerErrorResponse());
   }
 
-  const roomId = ((/^\/(?:rooms|room-media)\/([^/]+)\/.+$/).exec(request.uri) || [])[1];
+  const roomId = ((/^\/room-media\/([^/]+)\/.+$/).exec(request.uri) || [])[1];
   if (!roomId) {
     // Request path does not match the required pattern -> 404
     return callback(null, notFoundResponse());
