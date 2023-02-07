@@ -4,7 +4,7 @@ import { createSandbox } from 'sinon';
 import WebsiteApiClient from './website-api-client.js';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-function createLambdaEvent({ host = 'localhost:10000', method = 'GET', uri = '/rooms/abc/my-image.png', cookie = 'SESSION_ID=s%3AIMb28VLUKex1w166' }) {
+function createLambdaEvent({ host = 'localhost:10000', method = 'GET', uri = '/room-media/abc/my-image.png', cookie = 'SESSION_ID=s%3AIMb28VLUKex1w166' }) {
   return {
     Records: [
       {
@@ -58,7 +58,7 @@ describe('index', () => {
       });
       it('should respond with the website\'s login page url in the location header with a redirect query param', async () => {
         const result = await promisifiedHandler(createLambdaEvent({ cookie: null }), {});
-        expect(result.headers?.location?.[0]?.value).toBe('http://localhost:3000/login?redirect=http%3A%2F%2Flocalhost%3A10000%2Frooms%2Fabc%2Fmy-image.png');
+        expect(result.headers?.location?.[0]?.value).toBe('http://localhost:3000/login?redirect=http%3A%2F%2Flocalhost%3A10000%2Froom-media%2Fabc%2Fmy-image.png');
       });
     });
 
@@ -94,7 +94,7 @@ describe('index', () => {
         });
         it('should respond with the website\'s login page url in the location header with a redirect query param', async () => {
           const result = await promisifiedHandler(createLambdaEvent({}), {});
-          expect(result.headers?.location?.[0]?.value).toBe('http://localhost:3000/login?redirect=http%3A%2F%2Flocalhost%3A10000%2Frooms%2Fabc%2Fmy-image.png');
+          expect(result.headers?.location?.[0]?.value).toBe('http://localhost:3000/login?redirect=http%3A%2F%2Flocalhost%3A10000%2Froom-media%2Fabc%2Fmy-image.png');
         });
       });
 
