@@ -24,7 +24,7 @@ export X_ROOMS_AUTH_SECRET="<secret>" # mandatory
 export DISABLE_LOGGING="true" # optional, defaults to logging being enabled
 ~~~
 
-As AWS Lambda@Edge function do not support environment variables, any values have to be injected into the code itself after deployment, for example (at the top of the bundle file:
+As AWS Lambda@Edge function do not support environment variables, any values have to be injected into the code itself after deployment, for example at the top of the bundle file:
 
 ~~~js
 process.env.SESSION_COOKIE_NAME = 'SESSION_ID';
