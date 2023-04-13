@@ -95,10 +95,6 @@ export X_ROOMS_AUTH_SECRET="<secret>"
 node ./node_modules/@educandu/rooms-auth-lambda/src/dev-server/run.js
 ~~~
 
-## License
-
-Educandu is released under the MIT License. See the bundled LICENSE file for details.
-
 ---
 
 ## OER learning platform for music
@@ -111,5 +107,5 @@ A Project of the 'Hochschule für Musik und Theater München' (University for Mu
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Logo_Hochschule_f%C3%BCr_Musik_und_Theater_M%C3%BCnchen_.png" alt="Logo der Hochschule für Musik und Theater München" width="200"/>
 
-Project owner: Bernd Redmann\
+Project owner: Hochschule für Musik und Theater München\
 Project management: Ulrich Kaiser
