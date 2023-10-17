@@ -6,7 +6,7 @@ export function lambdaMiddleware(cdnBaseUrl) {
   const proxy = httpProxy.createProxyServer({ target: cdnBaseUrl });
 
   return async (req, res, next) => {
-    if ((/^\/rooms\/.+$/).test(req.url)) {
+    if ((/^\/(room-media|document-input-media)\/.+$/).test(req.url)) {
       // eslint-disable-next-line no-console
       console.log('Sending request to Lambda@Edge');
       try {
