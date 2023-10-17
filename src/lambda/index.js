@@ -22,7 +22,7 @@ export async function handler(event, _context, callback) {
   if (roomId) {
     documentInputId = null;
   } else {
-    [documentInputId, roomId] = ((/^\/document-input-media\/([^/]+)\/([^/]+)\/.+$/).exec(request.uri) || []).slice(1, 3);
+    [roomId, documentInputId] = ((/^\/document-input-media\/([^/]+)\/([^/]+)\/.+$/).exec(request.uri) || []).slice(1, 3);
   }
 
   if (!roomId) {
