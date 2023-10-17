@@ -16,9 +16,17 @@ export async function handler(event, _context, callback) {
     return callback(null, internalServerErrorResponse());
   }
 
-  const roomId = ((/^\/room-media\/([^/]+)\/.+$/).exec(request.uri) || [])[1];
+  let roomId;
+  let documentInputId;
+  roomId = ((/^\/room-media\/([^/]+)\/.+$/).exec(request.uri) || [])[1];
+  if (roomId) {
+    documentInputId = null;
+  } else {
+    [documentInputId, roomId] = ((/^\/document-input-media\/([^/]+)\/([^/]+)\/.+$/).exec(request.uri) || []).slice(1, 3);
+  }
+
   if (!roomId) {
-    // Request path does not match the required pattern -> 404
+    // Request path does not match any of the required patterns -> 404
     return callback(null, notFoundResponse());
   }
 
@@ -30,7 +38,9 @@ export async function handler(event, _context, callback) {
 
   let verificationResponse;
   try {
-    verificationResponse = await websiteApiClient.callRoomAccessAuthEndpoint(roomId, sessionCookie);
+    verificationResponse = documentInputId
+      ? await websiteApiClient.callDocumentInputAccessAuthEndpoint(documentInputId, sessionCookie)
+      : await websiteApiClient.callRoomAccessAuthEndpoint(roomId, sessionCookie);
   } catch (err) {
     logger.error(inspect(err));
     return callback(null, internalServerErrorResponse());
