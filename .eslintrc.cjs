@@ -1,3 +1,3 @@
 module.exports = {
-  extends: ['@educandu/eslint-config']
+  extends: ['./.eslint-config.cjs']
 };

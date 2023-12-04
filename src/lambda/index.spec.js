@@ -81,7 +81,7 @@ describe('index', () => {
       });
       it('should call the document input media authorization endpoint', async () => {
         await promisifiedHandler(createLambdaEvent({ uri: '/document-input-media/xyz/abc/my-image.png' }), {});
-        assert.calledOnceWithExactly(WebsiteApiClient.prototype.callDocumentInputAccessAuthEndpoint, 'xyz', SESSION_COOKIE_VALUE);
+        assert.calledOnceWithExactly(WebsiteApiClient.prototype.callDocumentInputAccessAuthEndpoint, 'abc', SESSION_COOKIE_VALUE);
       });
     });
 
