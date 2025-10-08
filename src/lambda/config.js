@@ -17,4 +17,3 @@ if (!X_ROOMS_AUTH_SECRET) {
 export const CLOUDFRONT_PROTO = new URL(WEBSITE_BASE_URL).protocol;
 
 export const DISABLE_LOGGING = process.env.DISABLE_LOGGING === true.toString();
-

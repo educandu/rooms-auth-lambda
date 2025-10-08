@@ -11,3 +11,7 @@ export function getRoomAccessAuthorizationEndpointUrl(roomId) {
 export function getDocumentInputAccessAuthorizationEndpointUrl(documentInputId) {
   return `${WEBSITE_BASE_URL}/api/v1/doc-inputs/${encodeURIComponent(documentInputId)}/authorize-resources-access`;
 }
+
+export function getMediaTrashAccessAuthorizationEndpointUrl() {
+  return `${WEBSITE_BASE_URL}/api/v1/media-trash/items/authorize-resources-access`;
+}
