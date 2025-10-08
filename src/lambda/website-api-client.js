@@ -1,6 +1,6 @@
 import phin from 'phin';
 import { SESSION_COOKIE_NAME, X_ROOMS_AUTH_SECRET } from './config.js';
-import { getDocumentInputAccessAuthorizationEndpointUrl, getRoomAccessAuthorizationEndpointUrl } from './urls.js';
+import { getDocumentInputAccessAuthorizationEndpointUrl, getMediaTrashAccessAuthorizationEndpointUrl, getRoomAccessAuthorizationEndpointUrl } from './urls.js';
 
 // Until Lambda@Edge supports node v18.x we have to polyfill native global `fetch`:
 globalThis.fetch ??= async function fetch(url, options) {
@@ -22,6 +22,17 @@ export default class WebsiteApiClient {
 
   callDocumentInputAccessAuthEndpoint(documentInputId, sessionCookie) {
     return fetch(getDocumentInputAccessAuthorizationEndpointUrl(documentInputId), {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Cookie': `${SESSION_COOKIE_NAME}=${sessionCookie}`,
+        'x-rooms-auth-secret': X_ROOMS_AUTH_SECRET
+      }
+    });
+  }
+
+  callMediaTrashAccessAuthEndpoint(sessionCookie) {
+    return fetch(getMediaTrashAccessAuthorizationEndpointUrl(), {
       method: 'GET',
       headers: {
         'Accept': 'application/json',

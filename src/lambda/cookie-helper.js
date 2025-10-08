@@ -10,5 +10,5 @@ export function parseCookie(headers, cookieName) {
     });
   }
 
-  return parsedCookie[cookieName];
+  return parsedCookie[cookieName] ?? null;
 }

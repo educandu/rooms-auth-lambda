@@ -1,8 +1,7 @@
 import { inspect } from 'node:util';
 import { logger } from './logging.js';
-import { parseCookie } from './cookie-helper.js';
-import { SESSION_COOKIE_NAME } from './config.js';
 import WebsiteApiClient from './website-api-client.js';
+import { analyzeRequest, REQUEST_TYPE } from './request-helper.js';
 import { forbiddenResponse, internalServerErrorResponse, loginRedirectResponse, notFoundResponse } from './response-helper.js';
 
 const websiteApiClient = new WebsiteApiClient();
@@ -16,31 +15,33 @@ export async function handler(event, _context, callback) {
     return callback(null, internalServerErrorResponse());
   }
 
-  let roomId;
-  let documentInputId;
-  roomId = ((/^\/room-media\/([^/]+)\/.+$/).exec(request.uri) || [])[1];
-  if (roomId) {
-    documentInputId = null;
-  } else {
-    [roomId, documentInputId] = ((/^\/document-input-media\/([^/]+)\/([^/]+)\/.+$/).exec(request.uri) || []).slice(1, 3);
-  }
+  const { requestType, roomId, documentInputId, sessionCookie } = analyzeRequest(request);
 
-  if (!roomId) {
+  if (requestType === REQUEST_TYPE.unknown) {
     // Request path does not match any of the required patterns -> 404
     return callback(null, notFoundResponse());
   }
 
-  const sessionCookie = parseCookie(request.headers, SESSION_COOKIE_NAME);
   if (!sessionCookie) {
-    // If there is no cookie, we redirect to the login page, so the user can login and then be redirected back to the room resource
+    // If there is no cookie, we redirect to the login page, so the user can login and then be redirected back to the requested resource
     return callback(null, loginRedirectResponse(request));
   }
 
   let verificationResponse;
   try {
-    verificationResponse = documentInputId
-      ? await websiteApiClient.callDocumentInputAccessAuthEndpoint(documentInputId, sessionCookie)
-      : await websiteApiClient.callRoomAccessAuthEndpoint(roomId, sessionCookie);
+    switch (requestType) {
+      case REQUEST_TYPE.roomMedia:
+        verificationResponse = await websiteApiClient.callRoomAccessAuthEndpoint(roomId, sessionCookie);
+        break;
+      case REQUEST_TYPE.documentInputMedia:
+        verificationResponse = await websiteApiClient.callDocumentInputAccessAuthEndpoint(documentInputId, sessionCookie);
+        break;
+      case REQUEST_TYPE.mediaTrash:
+        verificationResponse = await websiteApiClient.callMediaTrashAccessAuthEndpoint(sessionCookie);
+        break;
+      default:
+        throw new Error(`Unexpected request type: '${requestType}'`);
+    }
   } catch (err) {
     logger.error(inspect(err));
     return callback(null, internalServerErrorResponse());
