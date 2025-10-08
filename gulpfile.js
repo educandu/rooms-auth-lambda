@@ -51,7 +51,7 @@ export async function build() {
     // eslint-disable-next-line require-atomic-updates
     currentAppBuildContext = await esbuild.bundle({
       entryPoints: ['src/lambda/index.js'],
-      target: ['node20'],
+      target: ['node16'],
       platform: 'node',
       format: 'cjs',
       splitting: false,
